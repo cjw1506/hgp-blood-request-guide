@@ -1,0 +1,31 @@
+import { diseases, calculateRequiredTests, type FormState } from './rules';
+export type InputState = {selectedDiseases:string[];isOnDOAC:boolean|null;isOnLithium:boolean|null;isOnAntipsychotics:boolean|null;isOnMetformin:boolean|null;ckdStage:'3a'|'3b'|'4'|'5'|null};
+export const newInput = ():InputState=>({selectedDiseases:[],isOnDOAC:null,isOnLithium:null,isOnAntipsychotics:null,isOnMetformin:null,ckdStage:null});
+export function pendingQuestions(input:InputState){return diseases.filter(d=>input.selectedDiseases.includes(d.name)).flatMap(d=>d.questions||[]).filter(q=>input[q.key]===null||input[q.key]===undefined);}
+export function parseInput(raw:unknown):InputState{
+ if(!raw||typeof raw!=='object')throw new Error('Invalid request details.');const r=raw as Record<string,unknown>;
+ if(!Array.isArray(r.selectedDiseases)||!r.selectedDiseases.length||r.selectedDiseases.length>diseases.length)throw new Error('Select at least one recorded condition or review.');
+ if(r.selectedDiseases.some(n=>typeof n!=='string'||!diseases.some(d=>d.name===n)))throw new Error('Unknown condition.');
+ const input=newInput();input.selectedDiseases=[...new Set(r.selectedDiseases as string[])];
+ for(const key of ['isOnDOAC','isOnLithium','isOnAntipsychotics','isOnMetformin'] as const){if(r[key]!==null&&r[key]!==undefined&&typeof r[key]!=='boolean')throw new Error('Medicine answers must be Yes or No.');input[key]=(r[key] as boolean|null|undefined)??null;}
+ if(r.ckdStage!==null&&r.ckdStage!==undefined&&!['3a','3b','4','5'].includes(r.ckdStage as string))throw new Error('Select a valid CKD stage.');input.ckdStage=(r.ckdStage as InputState['ckdStage'])??null;
+ if(pendingQuestions(input).length)throw new Error('Complete every required monitoring answer before reviewing the test list.');return input;
+}
+export function calculate(input:InputState){return calculateRequiredTests({...input,selectedDiseases:new Set(input.selectedDiseases),isOnDOAC:input.isOnDOAC??false,isOnLithium:input.isOnLithium??false,isOnAntipsychotics:input.isOnAntipsychotics??false,isOnMetformin:input.isOnMetformin??false,ckdStage:input.ckdStage??'3a'} as FormState);}
+export const frequencyGroup=(f:string)=>f.toLowerCase().trim()==='monthly'?'monthly':f==='3 monthly'?'quarterly':f==='6 monthly'?'halfyear':f==='Annually'?'annual':'other';
+export const conditionLabel=(name:string)=>name==='B12 Anemia'?'B12 anaemia':name;
+export const testNames:Record<string,string>={'FBC':'Full blood count','U&Es':'Urea & electrolytes','LFTs':'Liver function','HbA1c':'HbA1c','TFTs':'Thyroid function','LIPIDS':'Lipid profile','LITHIUM':'Lithium level','CALCIUM':'Calcium','BNP':'BNP','B12':'Vitamin B12','URINE (ACR)':'Urine ACR','PROLACTIN':'Prolactin'};
+export type Prompt={id:string;title:string;body:string;checklist:string[];stage:'login'|'condition'|'review';conditions:string[];frequency:'request'|'session'|'acknowledged';action:'none'|'audit'|'guidance'|'monitoring';priority:'info'|'important';status:'draft'|'published'|'archived';startDate:string|null;endDate:string|null;revision:number;updatedAt?:string;updatedBy?:string};
+export const promptTemplates:Omit<Prompt,'id'|'revision'>[]=[
+ {title:'Check medication monitoring',body:'Check the recorded medication list and any shared-care or specialist monitoring plan before preparing the request. Ask the responsible clinician if the required tests or timing are unclear.',checklist:['Medication list checked','Monitoring plan checked'],stage:'review',conditions:[],frequency:'request',action:'monitoring',priority:'important',status:'draft',startDate:null,endDate:null},
+ {title:'CVNeed review preparation',body:'In the EMIS QOF box, hover over GM | CVNeed Reviews Incomplete to see missing CORE / STRETCH review items. Check which bloods and other tasks are outstanding for this patient.',checklist:['CVNeed hover details checked','Outstanding bloods and other review tasks checked'],stage:'review',conditions:[],frequency:'request',action:'none',priority:'info',status:'draft',startDate:null,endDate:null},
+ {title:'Check smoking status',body:'Check whether smoking status is up to date in EMIS. Record any required update using the practice pathway.',checklist:['Smoking status checked'],stage:'review',conditions:[],frequency:'request',action:'none',priority:'info',status:'draft',startDate:null,endDate:null},
+ {title:'Check AUDIT-C status',body:'Check whether an alcohol screening assessment is outstanding. Use the calculator if an assessment is needed, then record the result in EMIS.',checklist:[],stage:'review',conditions:[],frequency:'request',action:'audit',priority:'info',status:'draft',startDate:null,endDate:null},
+];
+export const defaultGuidance='Use the diagnoses and medicines recorded in EMIS. Check recent results and the documented monitoring plan before requesting tests.\n\nThe guide combines matching rules; it cannot determine whether a test is due today. Confirm exact local ICE labels. Ask the responsible clinician if a diagnosis, CKD stage, shared-care requirement or interval is unclear.\n\nKeep urine requests separate from blood tests. Where required, arrange a specimen pot and add the relevant appointment comment.\n\nNo patient identifiers should be entered in this guide. This app does not place orders in ICE.';
+export function auditScore(answers:(number|null)[]){
+ if(answers.length!==3||answers.some(v=>v===null||!Number.isInteger(v)||v!<0||v!>4))return null;const score=answers.reduce<number>((sum,v)=>sum+v!,0);
+ return{score,category:score<=4?'Lower-risk screen':score<=7?'Increasing-risk screen':score<=10?'Higher-risk screen':'Possible dependence: further assessment',positive:score>=5,advice:score>=11?'A positive screen. Follow the practice pathway for full AUDIT and clinical assessment; specialist assessment may be appropriate.':score>=5?'A positive screen. Complete the full AUDIT and follow the practice pathway for advice and review.':'A negative screen. Encourage lower-risk drinking. This score alone does not establish weekly unit intake.'};
+}
+export const drinkUnits=(quantity:number,volume:number,abv:number)=>quantity*volume*abv/1000;
+export function unitsBand(units:number){const rounded=Math.round(units);return rounded<=2?0:rounded<=4?1:rounded<=6?2:rounded<=9?3:4;}

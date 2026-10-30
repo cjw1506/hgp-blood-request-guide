@@ -1,0 +1,36 @@
+.user-frame{grid-template-columns:minmax(0,1fr)}
+.app-content{display:flex;flex-direction:column}
+.workspace-screen{flex:1;min-height:0;height:auto}
+.admin-page{flex:1;min-height:0}
+.admin-pin-notice{flex:none;margin:12px 0 0;padding:9px 12px;font-size:12px}
+.admin-pin-notice .text-button{padding:0 3px;color:#713400;font-size:inherit;text-decoration:underline}
+.login-screen{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:35px 20px;background:#f5f7fc}
+.login-card{width:100%;max-width:470px;padding:35px;border-radius:22px;background:#fff;border:1px solid #b5c4da;border-top:7px solid #ff7a1a;box-shadow:0 15px 45px #263c6414}
+.login-brand{display:flex;align-items:center;gap:15px;margin-bottom:34px}
+.login-brand>span{font-size:10px;letter-spacing:1.7px;max-width:150px;color:#40516d;line-height:1.8}
+.login-card h1{font-size:32px;font-weight:500;line-height:1.3;letter-spacing:-.8px;margin:7px 0 12px;max-width:350px}
+.login-description{font-size:14px;color:#4e5d75;line-height:1.7;margin:0 0 26px}
+.login-input{display:flex;align-items:center;gap:10px;border:1.5px solid #8392ac;background:#fff;border-radius:10px;padding:0 13px}
+.login-input>svg{color:#174fe0;flex-shrink:0;width:19px;height:19px}
+.login-input input{flex:1;width:100%;border:0;background:transparent;min-height:47px;font-size:16px;padding:11px 0;border-radius:0}
+.login-input:focus-within{outline:2px solid #174fe0;outline-offset:2px}
+.login-input input:focus-visible{outline:none}
+.login-card .form-field{margin-bottom:20px}
+.login-submit{width:100%;justify-content:center;min-height:47px;font-size:15px;margin-top:3px}
+.login-forgot{display:flex;align-items:center;gap:6px;margin:14px auto;color:#174bc8;font-size:13px;padding:8px}
+.login-forgot svg{width:16px;height:16px}
+.login-footnote{font-size:11px;color:#4e5d75;line-height:1.8;margin:25px 0 18px;padding-top:18px;border-top:1px solid #ccd5e3}
+.owner-recovery{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#174bc8;text-decoration:none;padding:6px}
+.owner-recovery:hover{text-decoration:underline}
+.owner-recovery svg{width:15px;height:15px}
+.reset-queue{padding:20px;border:2px solid #174fe0;border-radius:13px;background:#fff;margin-bottom:25px}
+.reset-queue h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:600;color:#174bc8}
+.reset-queue h2 svg{color:#174fe0;width:22px;height:22px}
+.reset-queue>p{font-size:12px;color:#40516d;margin-top:8px;line-height:1.7}
+.reset-row{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-top:16px;margin-top:16px;border-top:1px solid #ccd5e3}
+.reset-row strong{display:block;font-size:14px;color:#18243d;overflow-wrap:anywhere}
+.reset-row small{display:block;font-size:11px;margin-top:5px;color:#4e5d75}
+.reset-row>div:last-child{display:flex;gap:8px;flex-wrap:wrap}
+.reset-row .secondary{background:#174fe0;color:#fff;border-color:#174fe0}
+@media(max-width:950px){.user-frame{display:flex;flex-direction:column}.admin-pin-notice{margin-bottom:8px}.app-content{overflow:visible}}
+@media(max-width:660px){.user-frame .app-main{min-height:100dvh}.reset-row{flex-direction:column;align-items:start;gap:12px}.login-card{padding:27px 23px}.login-card h1{font-size:29px}.login-screen{padding:20px 14px}.login-brand{margin-bottom:27px}}

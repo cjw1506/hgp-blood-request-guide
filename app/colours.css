@@ -1,0 +1,87 @@
+/* Colour meanings: white = available, orange = selected/action, blue = required check.
+   Frequency colours live in globals.css and retain their written intervals. */
+.condition-group .condition-tile{background:#fff;color:#18243d;border-color:#91a3bf}
+.condition-group .condition-tile span{color:inherit}
+.condition-group .condition-tile>svg{color:#174fe0;background:none;border:0;border-radius:0;padding:0;width:29px;height:29px;flex-shrink:0;stroke-width:1.8;transition:transform .18s}
+.condition-group .condition-tile:hover{border-color:#174fe0}
+.condition-group .condition-tile:hover>svg{transform:translateY(-1px)}
+.condition-group .condition-tile.selected{background:#ff7a1a;color:#20150d;border-color:#b74800;box-shadow:0 0 0 2px #b74800}
+.condition-group .condition-tile.selected>svg{color:#20150d}
+.condition-tile input[type=checkbox]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border:1.5px solid #71829e;border-radius:4px;background:#fff;color:#18243d}
+.condition-tile input[type=checkbox]:checked{background:#18243d;border-color:#18243d;color:#fff}
+.condition-tile input[type=checkbox]:checked::after{content:'';position:absolute;left:4px;top:1px;width:6px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.condition-group .monitoring-panel,.condition-group .monitoring-panel.answered{background:#fff;border-color:#174fe0;border-width:2px;box-shadow:none}
+.condition-group .monitoring-panel summary{color:#fff;background:#174fe0;min-height:37px}
+.condition-group .monitoring-panel[open] summary{border-bottom:1px solid #174fe0}
+.monitoring-content .radio-choice{background:#fff;color:#18243d;border-color:#8392ac;accent-color:#174fe0}
+.monitoring-content .radio-choice:hover{border-color:#174fe0}
+.monitoring-content .radio-choice.chosen{background:#ff7a1a;color:#20150d;border-color:#b74800;box-shadow:none}
+.monitoring-content .radio-choice.chosen input{accent-color:#20150d}
+.monitoring-content .question-hint{color:#174bc8;font-weight:600}
+/* Keep the screening sheet white, with bold colour for headers and selections. */
+.audit-modal{background:#fff;border:2px solid #174fe0}
+.audit-modal .modal-head{background:#174fe0;border-bottom:0;color:#fff}
+.audit-modal .modal-head h2{color:#fff}
+.audit-modal .modal-head .icon-button{color:#174fe0;background:#fff;border-color:#fff}
+.audit-modal .calculator-intro>p{color:#40516d}
+.audit-modal .calculator-intro .secondary{background:#fff;border-color:#174fe0;color:#174bc8}
+.audit-modal .audit-question{--question-accent:#174fe0;--question-text:#fff;min-width:0;border:2px solid var(--question-accent);border-radius:12px;background:#fff;padding:13px 14px 15px;margin:24px 0}
+.audit-modal .audit-question-1{--question-accent:#174fe0;--question-text:#fff}
+.audit-modal .audit-question-2{--question-accent:#174fe0;--question-text:#fff}
+.audit-modal .audit-question legend{padding:0 6px;margin-left:-4px;margin-bottom:5px;font-size:14px;font-weight:700;max-width:100%;color:#18243d}
+.audit-modal .step-number{background:var(--question-accent);color:var(--question-text);border:0;flex-shrink:0}
+.audit-modal .audit-options .radio-choice{background:#fff;color:#18243d;border-color:#8392ac;transition:border-color .16s,background .16s;accent-color:var(--question-accent)}
+.audit-modal .audit-options .radio-choice:hover{border-color:var(--question-accent);box-shadow:inset 0 0 0 1px var(--question-accent)}
+.audit-modal .audit-options .radio-choice.chosen{background:#ff7a1a;color:#20150d;border-color:#b74800;box-shadow:none}
+.audit-modal .audit-options .radio-choice.chosen input{accent-color:#20150d}
+.audit-modal .unit-accordion{border:2px solid #174fe0;background:#fff;box-shadow:none}
+.audit-modal .unit-accordion summary{background:#174fe0;color:#fff;padding:14px;font-weight:800;min-height:51px;transition:background .18s}
+.audit-modal .unit-accordion summary:hover{background:#0b3bbb}
+.audit-modal .unit-accordion summary>svg{color:#fff;flex-shrink:0}
+.audit-modal .unit-accordion summary>svg:first-child{width:23px;height:23px}
+.audit-modal .unit-accordion summary>svg:last-child{transition:transform .18s}
+.audit-modal .unit-accordion[open] summary{border-bottom:1px solid #174fe0}
+.audit-modal .unit-accordion[open] summary>svg:last-child{transform:rotate(180deg)}
+.audit-modal .unit-content{padding:15px;background:#fff}
+.audit-modal .unit-content .muted,.audit-modal .unit-content .fine{color:#40516d}
+.audit-modal .preset-buttons{gap:8px}
+.audit-modal .drink-preset{display:flex;align-items:center;text-align:left;gap:9px;background:#fff;color:#18243d;border-color:#174fe0;padding:9px 11px;min-height:54px;box-shadow:none}
+.audit-modal .drink-preset:hover{background:#eef3ff}
+.audit-modal .drink-preset>svg{color:#174fe0;width:23px;height:23px;flex-shrink:0}
+.audit-modal .drink-preset span{line-height:1.4}
+.audit-modal .drink-preset small{display:block;font-size:10px;color:#40516d;font-weight:600;margin-top:2px}
+.audit-modal .drink-row{background:#fff;border:1.5px solid #96abc9;padding:12px;border-radius:10px;margin-top:9px;gap:9px}
+.audit-modal .drink-row>strong{color:#18243d}
+.audit-modal .drink-row label{color:#40516d}
+.audit-modal .drink-row input{background:#fff;border-color:#8392ac;color:#18243d;accent-color:#174fe0}
+.audit-modal .unit-total{background:#fff;border:2px solid #174fe0;border-radius:10px;padding:14px;flex-wrap:wrap;gap:12px;color:#18243d}
+.audit-modal .unit-total .eyebrow,.audit-modal .unit-total strong,.audit-modal .unit-total small{color:#174bc8}
+.audit-modal .unit-total .primary{background:#ff7a1a;color:#20150d;border-color:#de5b00;box-shadow:none}
+.audit-modal .calculate-button{background:#ff7a1a;border-color:#de5b00;color:#20150d;font-weight:800}
+.audit-modal .calculator-source a{color:#174bc8}
+.audit-result .secondary{background:#fff;color:#18243d;border-color:#fff}
+@media(max-width:660px){.audit-modal .audit-question{padding:11px 10px 13px}.audit-modal .unit-content{padding:11px}.audit-modal .drink-row{padding:10px}.audit-modal .drink-preset{flex:1 1 145px}.audit-modal .unit-total{padding:12px}.audit-modal .unit-accordion summary{font-size:12px;gap:7px}.condition-group .condition-tile>svg{width:28px;height:28px}}
+@media(prefers-reduced-motion:reduce){.condition-group .condition-tile:hover>svg{transform:none}}
+.condition-tile input[type=checkbox]:focus-visible{outline-color:#174fe0}
+.monitoring-content .radio-choice.chosen input:focus-visible{outline-color:#18243d}
+.audit-modal .audit-options .radio-choice.chosen input:focus-visible{outline-color:#18243d}
+button .busy svg{color:currentColor}
+
+/* Shared selection states follow the same rule in staff and admin screens. */
+.header-actions>.secondary{background:#174fe0;border-color:#174fe0;color:#fff}
+.header-actions>.secondary:hover{background:#0b3bbb}
+.required-tag{background:#174fe0;color:#fff;border-color:#174fe0}
+.monitoring-question .required-tag{background:#c62828;color:#fff;border-color:#a91f1f}
+.popup-list button.active,.view-tabs button.active{background:#ff7a1a;color:#20150d;border-color:#de5b00}
+.status-tag:not(.status-ok):not(.status-muted){background:#fff;color:#40516d;border-color:#8392ac}
+
+.condition-tile.selected input[type=checkbox]:focus-visible{outline-color:#18243d}
+
+/* Keep the popup dismissal distinct from the message and other actions. */
+.primary.popup-close-button{display:flex;width:100%;margin-top:20px;min-height:44px;background:#007f3b;border-color:#00662f;color:#fff}
+.primary.popup-close-button:hover{background:#00662f;border-color:#005525}
+
+.header-actions>.pwa-install-button{background:#fff;color:#174bc8;border-color:#174fe0}
+.header-actions>.pwa-install-button:hover{background:#eef3ff}
+.login-card>.pwa-install-button{display:flex;width:100%;margin-top:14px;justify-content:center;background:#fff;color:#174bc8;border-color:#174fe0}
+@media(max-width:660px){.header-actions>.pwa-install-button span{display:none}.header-actions>.pwa-install-button{padding:8px}}

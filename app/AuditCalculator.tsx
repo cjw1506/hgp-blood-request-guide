@@ -1,0 +1,34 @@
+'use client';
+import { useMemo,useState } from 'react';
+import { RotateCcw,ChevronDown,Calculator,Beer,Wine,Martini,CupSoda,Trash2,Copy,Check } from 'lucide-react';
+import { Modal,ErrorMessage } from './ui';
+import { auditScore,drinkUnits,unitsBand } from './lib/domain';
+import { copy } from './lib/client';
+const questions=[
+ {title:'How often do you have a drink containing alcohol?',options:['Never','Monthly or less','2–4 times a month','2–3 times a week','4 or more times a week']},
+ {title:'How many units of alcohol do you drink on a typical day when drinking?',options:['0–2 units','3–4 units','5–6 units','7–9 units','10 or more units']},
+ {title:'How often have you had 6 or more units if female, or 8 or more if male, on a single occasion in the last year?',options:['Never','Less than monthly','Monthly','Weekly','Daily or almost daily']},
+];
+type Drink={id:string;name:string;quantity:number;volume:number;abv:number};
+const presets=[{name:'Pint of beer / cider',volume:568,abv:4,icon:Beer,tone:'beer'},{name:'Wine · medium glass',volume:175,abv:12,icon:Wine,tone:'wine'},{name:'Wine · large glass',volume:250,abv:12,icon:Wine,tone:'wine'},{name:'Spirit · single',volume:25,abv:40,icon:Martini,tone:'spirit'},{name:'Beer / cider · can',volume:440,abv:4,icon:Beer,tone:'beer'},{name:'Custom drink',volume:100,abv:5,icon:CupSoda,tone:'custom'}];
+export default function AuditCalculator({onClose}:{onClose:()=>void}){
+ const [answers,setAnswers]=useState<(number|null)[]>([null,null,null]),[result,setResult]=useState<ReturnType<typeof auditScore>>(null),[error,setError]=useState(''),[copied,setCopied]=useState(false),[drinks,setDrinks]=useState<Drink[]>([]),[converter,setConverter]=useState(false);
+ const total=useMemo(()=>drinks.reduce((s,d)=>s+drinkUnits(d.quantity,d.volume,d.abv),0),[drinks]);
+ function answer(index:number,value:number){setAnswers(old=>{const next=[...old];next[index]=value;if(index===0){if(value===0){next[1]=0;next[2]=0;}else if(old[0]===0){next[1]=null;next[2]=null;}}return next;});setResult(null);setError('');setCopied(false);}
+ function reset(){setAnswers([null,null,null]);setResult(null);setError('');setCopied(false);setDrinks([]);setConverter(false);}
+ function updateDrink(id:string,key:'quantity'|'volume'|'abv',value:string){const max=key==='abv'?100:key==='quantity'?100:5000;setDrinks(old=>old.map(d=>d.id===id?{...d,[key]:Math.max(0,Math.min(max,Number(value)||0))}:d));}
+ async function copyScore(){if(!result)return;try{await copy('AUDIT-C: '+result.score+'/12. '+result.category+'.\n'+answers.map((a,i)=>'Q'+(i+1)+': '+questions[i].options[a??0]).join('\n')+'\n'+result.advice);setCopied(true);}catch{setError('Copy failed. Select and copy the result manually.');}}
+ return <Modal title="AUDIT-C calculator" onClose={onClose} wide className="audit-modal"><div className="calculator-intro"><p>Ask the patient the three screening questions. Record the score in EMIS.</p><button className="secondary small" onClick={reset}><RotateCcw/>Reset</button></div>
+ <form onSubmit={e=>{e.preventDefault();const scored=auditScore(answers);if(!scored){setError('Answer every question before calculating the score.');return;}setResult(scored);setCopied(false);}}>
+ {questions.map((q,index)=>(answers[0]===0&&index>0)?null:<fieldset className={'audit-question audit-question-'+index} key={index}><legend><span className="step-number">{index+1}</span>{q.title}</legend><div className="audit-options">{q.options.map((option,score)=><label className={'radio-choice '+(answers[index]===score?'chosen':'')} key={score}><input type="radio" name={'audit-'+index} checked={answers[index]===score} onChange={()=>answer(index,score)}/><span>{option}</span></label>)}</div>
+ {index===1&&<details className="unit-accordion" open={converter} onToggle={e=>setConverter(e.currentTarget.open)}><summary><Calculator/>Not sure? Convert drinks to units<ChevronDown/></summary><div className="unit-content"><p className="muted">Add the drinks consumed on a typical drinking day. Strength and serving size can be changed.</p><div className="preset-buttons">{presets.map(p=><button type="button" className={'secondary small drink-preset drink-'+p.tone} key={p.name} onClick={()=>setDrinks(old=>[...old,{name:p.name,volume:p.volume,abv:p.abv,id:crypto.randomUUID(),quantity:1}])}><p.icon aria-hidden="true"/><span>{p.name}<small>{p.volume} ml · {p.abv}% ABV</small></span></button>)}</div>
+ {drinks.map(d=><div className="drink-row" key={d.id}><strong>{d.name}</strong><label>Quantity<input aria-label={'Quantity of '+d.name} type="number" min="0" max="100" step="0.5" value={d.quantity} onChange={e=>updateDrink(d.id,'quantity',e.target.value)}/></label><label>Measure (ml)<input aria-label={'Measure in ml for '+d.name} type="number" min="0" max="5000" value={d.volume} onChange={e=>updateDrink(d.id,'volume',e.target.value)}/></label><label>ABV (%)<input aria-label={'ABV for '+d.name} type="number" min="0" max="100" step="0.1" value={d.abv} onChange={e=>updateDrink(d.id,'abv',e.target.value)}/></label><button type="button" className="icon-button" aria-label={'Remove '+d.name} onClick={()=>setDrinks(old=>old.filter(x=>x.id!==d.id))}><Trash2/></button></div>)}
+ <div className="unit-total"><div><span className="eyebrow">Estimated typical-day total</span><strong>{total.toFixed(1)} <small>units</small></strong></div><button type="button" className="primary" disabled={!drinks.length} onClick={()=>answer(1,unitsBand(total))}>Use suggested band</button></div><p className="fine">Suggested bands use the nearest whole unit. Confirm that the selected answer reflects the patient’s typical day. Units = quantity × ml × ABV ÷ 1,000.</p></div></details>}
+ </fieldset>)}
+ {answers[0]===0&&<p className="notice">No drinking reported. Questions 2 and 3 are scored zero.</p>}
+ <ErrorMessage message={error}/><button className="primary calculate-button" type="submit"><Calculator/>Calculate score</button>
+ </form>
+ {result&&<section className={'audit-result '+(result.score<=4?'result-low':result.score<=7?'result-medium':'result-high')} aria-live="polite"><div className="audit-result-top"><div><span className="eyebrow">AUDIT-C score</span><strong>{result.score}<small>/12</small></strong></div><button className="secondary small" onClick={copyScore}>{copied?<Check/>:<Copy/>}{copied?'Copied':'Copy for EMIS'}</button></div><h3>{result.category}</h3><p>{result.advice}</p></section>}
+ <p className="fine calculator-source">Screening supports assessment; it does not diagnose dependence. <a href="https://www.gov.uk/government/publications/alcohol-use-screening-tests" target="_blank" rel="noreferrer">UK screening tool</a> · <a href="https://www.nhs.uk/live-well/alcohol-advice/calculating-alcohol-units/" target="_blank" rel="noreferrer">NHS unit guidance</a>. Answers are not saved by this app.</p>
+ </Modal>;
+}

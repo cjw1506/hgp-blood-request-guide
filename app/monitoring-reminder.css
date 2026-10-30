@@ -1,0 +1,42 @@
+.request-reminders{margin-top:17px;display:flex;flex-direction:column;gap:10px}
+.medication-reminder{margin-top:0;border:2px solid #174fe0;border-radius:13px;background:#fff;overflow:hidden;box-shadow:0 3px 10px #233b6010}
+.medication-reminder-heading{display:flex;align-items:center;gap:9px;padding:9px 12px;background:#174fe0;color:#fff}
+.medication-reminder-heading>svg{width:21px;height:21px;stroke-width:2}
+.medication-reminder-heading span{display:block;font-size:10px;line-height:1.4;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:2px}
+.medication-reminder-heading h3{color:#fff;font-size:14px;font-weight:800;line-height:1.35;letter-spacing:0}
+.medication-reminder-body{padding:10px 12px}
+.medication-reminder-intro{color:#263750;font-size:12px;line-height:1.6;margin-bottom:9px}
+.medication-reminder-intro strong{font-weight:800;color:#18243d}
+.monitoring-examples{width:100%;border-collapse:collapse;table-layout:fixed;color:#263750;font-size:11px;line-height:1.5}
+.monitoring-examples th,.monitoring-examples td{padding:6px 8px;text-align:left;vertical-align:top;border-bottom:1px solid #cbd5e5;overflow-wrap:anywhere}
+.monitoring-examples thead th{background:#eef3ff;color:#174bc8;font-size:10px;font-weight:800;border-top:1px solid #a8bce6;border-bottom:1px solid #a8bce6}
+.monitoring-examples th:first-child{width:40%;padding-left:0}
+.monitoring-examples thead th:first-child{padding-left:9px}
+.monitoring-examples tbody th{font-weight:400}
+.monitoring-examples tbody th strong{display:block;font-size:12px;font-weight:800;color:#18243d}
+.monitoring-examples tbody th small{display:block;font-size:11px;font-weight:400;color:#40516d;margin-top:2px}
+.medication-reminder-note{font-size:11px;line-height:1.5;color:#40516d;margin-top:8px}
+.cvneed-reminder{display:flex;align-items:flex-start;gap:10px;background:#ffb400;color:#302000;border:1px solid #b57400;border-radius:9px;padding:11px 12px;margin-top:0}
+.cvneed-reminder>svg{width:22px;height:22px;margin-top:1px}
+.cvneed-reminder h3{font-size:13px;font-weight:800;line-height:1.4;margin:0 0 4px;color:#302000}
+.cvneed-reminder p{font-size:12px;line-height:1.6;color:#302000}
+.cvneed-reminder p>svg{width:13px;height:13px;vertical-align:-2px;margin-right:4px}
+.monitoring-sources{font-size:10px;line-height:1.7;color:#4e5d75;margin-top:11px}
+.monitoring-sources a{color:#174bc8}
+@media(min-width:1650px){.medication-reminder-body{padding:10px 12px}.monitoring-examples{font-size:12px}.monitoring-examples th:first-child{width:36%}.monitoring-examples tbody th strong{font-size:13px}.medication-reminder-intro{font-size:13px}}
+@media(max-width:660px){.medication-reminder-heading{padding:9px 11px}.medication-reminder-heading h3{font-size:14px}.medication-reminder-body{padding:11px}.monitoring-examples th,.monitoring-examples td{padding:8px 6px}.monitoring-examples th:first-child{width:41%}.cvneed-reminder{padding:10px;gap:8px}}
+
+.cvneed-bloods{margin-top:7px;padding-top:7px;border-top:1px solid #b57400}
+.medicine-reference{border:1px solid #9cb4e5;border-radius:8px;overflow:hidden}
+.medicine-reference-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:52px;border:0;border-radius:0;text-align:left;background:#174fe0;color:#fff;padding:11px 13px;font-size:13px;line-height:1.45;font-weight:800;cursor:pointer;transition:background .18s}
+.medicine-reference-toggle:hover{background:#103eb5}
+.medicine-reference-toggle:focus-visible{outline:3px solid #ff7a0b;outline-offset:-3px}
+.medicine-reference-toggle small{display:block;font-size:11px;font-weight:500;color:#fff;margin-top:3px}
+.medicine-reference-toggle svg{width:20px;height:20px;transition:transform .18s}
+.medicine-reference-toggle[aria-expanded=true]{border-bottom:1px solid #9cb4e5}
+.medicine-reference-toggle[aria-expanded=true] svg{transform:rotate(180deg)}
+.medicine-reference-content{padding:0 9px 9px;background:#fff}
+.test-grid{align-items:stretch}
+.test-card{display:flex;flex-direction:column;min-height:136px}
+.test-card .test-reasons{margin-top:auto;padding-top:8px}
+.test-card.urine-test-card{border-color:#b99445;box-shadow:0 0 0 1px #d6bb7b33}

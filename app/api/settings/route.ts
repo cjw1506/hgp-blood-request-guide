@@ -1,0 +1,3 @@
+import { api,db,now,audit,ok,json,text,guidance } from '../../lib/server';
+export async function GET(request:Request){return api(request,'user',async()=>ok({guidance:await guidance()}));}
+export async function POST(request:Request){return api(request,'admin',async actor=>{const b=await json(request),value=text(b.guidance,'guidance',16000);await db().prepare("INSERT INTO settings (key,value,updated_at) VALUES ('guidance',?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value,updated_at=excluded.updated_at").bind(value,now()).run();await audit(actor,'guidance_updated');return ok({ok:true});});}

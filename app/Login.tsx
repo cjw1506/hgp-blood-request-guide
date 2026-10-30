@@ -1,0 +1,16 @@
+'use client';
+import { useState } from 'react';
+import { ArrowRight,KeyRound,Mail,ArrowLeft,ShieldCheck,Check } from 'lucide-react';
+import { call } from './lib/client';
+import { Busy,ErrorMessage } from './ui';
+import { InstallAppButton } from './Pwa';
+export default function Login({onSignedIn,initialError='',allowOwnerRecovery=true}:{onSignedIn:()=>Promise<void>;initialError?:string;allowOwnerRecovery?:boolean}){
+ const [email,setEmail]=useState(''),[pin,setPin]=useState(''),[forgot,setForgot]=useState(false),[contact,setContact]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(initialError),[sent,setSent]=useState('');
+ function switchView(value:boolean){setForgot(value);setError('');setSent('');setPin('');}
+ return <main className="login-screen"><section className="login-card"><div className="login-brand"><div className="brand-mark large">HGP</div><span>HARWOOD GROUP PRACTICE</span></div><span className="eyebrow">Blood Request Guide</span><h1>{forgot?'Forgot your details?':'Staff sign in'}</h1><p className="login-description">{forgot?'Send a request to Christian to check your login details or reset your PIN.':'Sign in with the email address and PIN provided by Christian.'}</p>
+ {sent?<div className="success-panel" role="status"><Check/><p>{sent}</p><button className="secondary" onClick={()=>switchView(false)}>Back to sign in</button></div>:<form autoComplete="off" onSubmit={async e=>{e.preventDefault();setBusy(true);setError('');try{if(forgot){const data=await call('/api/auth',{operation:'forgot',contact});setSent(data.message);}else{await call('/api/auth',{operation:'login',email,pin});setPin('');await onSignedIn();}}catch(e){setError((e as Error).message);setPin('');}finally{setBusy(false);}}}>
+ {forgot?<label className="form-field">Your name or email address<input autoComplete="off" required maxLength={254} value={contact} onChange={e=>setContact(e.target.value)}/></label>:<><label className="form-field">Email address<div className="login-input"><Mail/><input type="email" autoComplete="off" required maxLength={254} value={email} onChange={e=>setEmail(e.target.value)}/></div></label><label className="form-field">Six-digit PIN<div className="login-input"><KeyRound/><input type="password" inputMode="numeric" autoComplete="off" required pattern="[0-9]{6}" maxLength={6} value={pin} onChange={e=>setPin(e.target.value.replace(/\D/g,''))}/></div></label></>}
+ <ErrorMessage message={error}/><button className="primary login-submit" disabled={busy}>{busy?<Busy label={forgot?'Sending request…':'Signing in…'}/>:<>{forgot?'Request help':'Sign in'}<ArrowRight/></>}</button></form>}
+ {!sent&&<button className="text-button login-forgot" onClick={()=>switchView(!forgot)}>{forgot?<><ArrowLeft/>Back to sign in</>:'Forgot login details?'}</button>}
+ <p className="login-footnote">{forgot?'No automatic email is sent. Christian handles resets in the admin area.':'Your login lasts until midnight UK time, including when you reopen the app. Sign out when someone else will use this PC.'}</p><InstallAppButton/>{allowOwnerRecovery&&<a className="owner-recovery" href="/signin-with-chatgpt?return_to=%2F%3Fadmin%3D1" target="_top"><ShieldCheck/>Administrator setup / recovery</a>}</section></main>;
+}
